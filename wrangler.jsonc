@@ -1,0 +1,26 @@
+{
+  // IMPORTANT: "name" must be exactly the name of your Worker in the Cloudflare dashboard.
+  "name": "testonic",
+  "main": "src/worker.js",
+  "compatibility_date": "2025-11-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "testonic"
+      // If the deploy says it cannot find the database, add its ID from Dashboard > D1:
+      // , "database_id": "PASTE-D1-DATABASE-ID"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "FILES"
+      // If the deploy asks for it, add the namespace ID from Dashboard > KV:
+      // , "id": "PASTE-KV-NAMESPACE-ID"
+    }
+  ]
+}

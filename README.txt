@@ -1,33 +1,26 @@
-Testonic - test series platform (Cloudflare Pages)
+Testonic - test series platform (Cloudflare Workers + static assets)
 
 FIRST LOGIN
   Username: aadi6581    Password: 01201
   Right after the first login open Account and change both.
-  (This default works only while no admin exists.)
 
-STRUCTURE (keep exactly like this in your GitHub repo)
-  public/                      website (index.html, logo, jszip.min.js)
-  functions/api/[[path]].js    backend (runs as a Cloudflare Pages Function)
-  Delete the old netlify/ folder, netlify.toml and package.json from the repo.
+REPO STRUCTURE (delete everything old: functions/, netlify/, netlify.toml, package.json)
+  public/            website
+  src/worker.js      backend (API) - needs D1 + KV bindings
+  wrangler.jsonc     config that declares the bindings
 
-SETUP (free plan is enough, no card needed)
-  1. Cloudflare dashboard > Storage & databases > D1 > Create database. Name: testonic
-  2. Storage & databases > KV > Create namespace. Name: testonic-files
-  3. Workers & Pages > Create > Pages > Connect to Git > choose your repo.
-       Framework preset: None
-       Build command: (leave empty)
-       Build output directory: public
-     Save and Deploy.
-  4. Open the project > Settings > Bindings (or Functions > Bindings) and add:
-       D1 database binding   variable name: DB      -> testonic
-       KV namespace binding  variable name: FILES   -> testonic-files
-     Add them for Production (and Preview if shown). The variable names must be exactly DB and FILES.
-  5. Deployments > Retry deployment (or push any commit).
-  6. Open https://YOUR-SITE.pages.dev/api/health   it must show {"ok":true,"db":true,"files":true}
-
-OPTIONAL
-  Settings > Variables > AUTH_SECRET = any long random string.
+SETUP
+  1. Put these files in your GitHub repo root and push.
+  2. Open wrangler.jsonc and make "name" EXACTLY the same as your Worker's name in the Cloudflare dashboard.
+  3. Workers & Pages > your Worker > Settings > Build:
+       Build command: (empty)     Deploy command: npx wrangler deploy
+  4. Push a commit (or Retry build). Wrangler creates the D1 database "testonic" and the KV namespace
+     automatically. If the build log says it cannot find/create them:
+       - Dashboard > Storage & databases > D1: create "testonic", copy its ID into wrangler.jsonc ("database_id")
+       - Dashboard > Storage & databases > KV: create a namespace, copy its ID into wrangler.jsonc ("id")
+     then push again.
+  5. Open https://YOUR-WORKER.workers.dev/api/health   it must show {"ok":true,"db":true,"files":true}
 
 LIMITS (free plan)
-  100,000 backend requests per day (the site refreshes every 20 s only while a tab is visible).
-  Files up to 20 MB each. A newly uploaded file can take up to about a minute to be readable everywhere.
+  100,000 API requests/day (site refreshes every 20 s only while a tab is visible).
+  Files up to 20 MB. A new upload can take up to about a minute to be readable everywhere.
