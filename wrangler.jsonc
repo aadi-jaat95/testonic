@@ -13,14 +13,14 @@
       "binding": "DB",
       "database_name": "testonic"
       // If the deploy says it cannot find the database, add its ID from Dashboard > D1:
-      // , "database_id": "PASTE-D1-DATABASE-ID"
+      , "database_id": "b419b345-33a7-45df-89c8-79698351269a"
     }
   ],
   "kv_namespaces": [
     {
       "binding": "FILES"
       // If the deploy asks for it, add the namespace ID from Dashboard > KV:
-      // , "id": "PASTE-KV-NAMESPACE-ID"
+      , "id": "3a60e0094268433599dedf3a69bcf530"
     }
   ]
 }
